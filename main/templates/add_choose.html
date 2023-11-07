@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+
+<!-- ADD -->
+<div class="album py-5">
+  <div class="container text-center">
+    <h3>
+        {% if language == 'kz' %}
+        <a href="{% url 'main:add' 'product' %}" class="btn btn-success">Элементті қосыңыз</a>
+        <a href="{% url 'main:add' 'category' %}" class="btn btn-success">Санат қосу</a>
+        <a href="{% url 'main:add' 'sub_category' %}" class="btn btn-success">Ішкі санатты қосыңыз</a>
+        <a href="{% url 'main:add' 'country' %}" class="btn btn-success">Ел қосу</a>
+        <a href="{% url 'main:edit' 'alert' 1 %}" class="btn btn-success">Хабарламаны өзгерту</a>
+        {% else %}
+        <a href="{% url 'main:add' 'product' %}" class="btn btn-success">Добавить товар</a>
+        <a href="{% url 'main:add' 'category' %}" class="btn btn-success">Добавить категорию</a>
+        <a href="{% url 'main:add' 'sub_category' %}" class="btn btn-success">Добавить подкатегорию</a>
+        <a href="{% url 'main:add' 'country' %}" class="btn btn-success">Добавить страну</a>
+        <a href="{% url 'main:edit' 'alert' 1 %}" class="btn btn-success">Изменить уведомление</a>
+        {% endif %}
+    </h3>
+  </div>
+</div>
+
+{% endblock %}

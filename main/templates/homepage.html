@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+{% load thumbnail %}
+
+
+<!--CATEGORIES-->
+<main class="my-5">
+  
+  <div class="container">
+    <div class="alert alert-success text-center" style="background-color: #72e0af; color: black" role="alert">
+      {% if language == 'kz' %}
+      {{ alert.text_kz }}
+      {% else %}
+      {{ alert.text }}
+      {% endif %}
+    </div>
+
+    <section class="text-center">
+
+      {% if language == 'kz' %}
+      <h4 class="display-6"><strong>Санаттар</strong></h4><hr/><br/>
+      {% else %}
+      <h4 class="display-6"><strong>Категории</strong></h4><hr/><br/>
+      <h4>{{ cntr }}</h4>
+      {% endif %}
+
+      <div class="row">
+
+      <!-- CATEGORIES -->
+      {% for c in categories %}
+      <div class="col-lg-2 col-md-4 col-sm-4 col-4 mb-4">
+          <div class="card bg-dark">
+            <a href="{% url 'main:sort_by' 'category' c.name %}">
+              <div class="hover-overlay ripple">
+                <img src="{{ c.image|thumbnail_url:'main' }}" class="img-fluid" />
+                  <div class="mask"></div>
+                <div class="card-img-overlay d-flex align-items-end">
+                  <h5 class="btn-success" style="color: #F1F1F1;">{% if language == 'kz' and c.name_kz %}{{ c.name_kz }}{% else %}{{ c.name }}{% endif %}</h5>
+                </div>
+              </div>
+            </a>
+          </div>
+      </div>
+      {% endfor %}
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+
+
+
+
+<!--PRODUCTS-->
+<main class="my-5">
+  <div class="container">
+    <section class="text-center">
+
+      {% if language == 'kz' %}
+      <h4 class="display-6"><strong>Тауарлар</strong></h4><hr/><br/>
+      {% else %}
+      <h4 class="display-6"><strong>Товары</strong></h4><hr/><br/>
+      {% endif %}
+
+
+      <div class="row">
+
+      <!-- PRODUCTS -->
+      {% for product in products %}
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card bg-dark">
+          <div class="hover-overlay ripple">
+            <img src="{{ product.image|thumbnail_url:'main' }}" class="img-fluid" />
+            <a href="{% url 'main:detail' product.pk %}">
+              <div class="mask"></div>
+            </a>
+          </div>
+          <div class="card-body">
+            {% if language == 'kz' %}
+                <h4 class="card-title"><a style="color: #40CB72;" href="{% url 'main:detail' product.pk %}">{{ product.name_kz }}</a></h4><hr/>
+                <h5 class="card-text"><a style="color: white;" href="{% url 'main:sort_by' 'category' product.category.name %}">{{ product.category.name_kz }}</a> | <a style="color: white;" href="{% url 'main:sort_by' 'country' product.country.name %}">{{ product.country.name_kz }}</a></h5><hr/>
+                <h5 class="card-text">{{ product.description_kz|truncatewords:40 }}</h5><hr/>
+                {% if product.in_stock == True %}
+                <h5><span class="card-text" style="color: #40CB72;">{{ product.price }}₸ &nbsp;&nbsp;</span><span class="mb-4">Қоймада бар</span></h5><hr/>
+                {% else %}
+                <h5><span class="card-text" style="color: #40CB72;">{{ product.price }}₸ &nbsp;&nbsp;</span><span class="mb-4">Алдын ала тапсырыс бойынша</span></h5><hr/>
+                {% endif %}
+                <div>
+                  <a class="btn btn-success" style="float: center;" href="{% url 'main:phone' product.pk %}">Сатып алу</a>
+                  <a class="btn btn-success" style="float: center;" href="{% url 'main:to_cart' product.pk %}">Себетке</a>
+                </div>
+            {% else %}
+                <h4 class="card-title"><a style="color: #40CB72;" href="{% url 'main:detail' product.pk %}">{{ product.name }}</a></h4><hr/>
+                <h5 class="card-text"><a style="color: white;" href="{% url 'main:sort_by' 'category' product.category.name %}">{{ product.category.name }}</a> | <a style="color: white;" href="{% url 'main:sort_by' 'country' product.country.name %}">{{ product.country.name }}</a></h5><hr/>
+                <h5 class="card-text">{{ product.description|truncatewords:50 }}</h5><hr/>
+                {% if product.in_stock == True %}
+                <h5><span class="card-text" style="color: #40CB72;">{{ product.price }}₸ &nbsp;&nbsp;</span><span class="mb-4">Есть в наличии</span></h5><hr/>
+                {% else %}
+                <h5><span class="card-text" style="color: #40CB72;">{{ product.price }}₸ &nbsp;&nbsp;</span><span class="mb-4">По предварительному заказу</span></h5><hr/>
+                {% endif %}
+                <div>
+                  <a class="btn btn-success" style="float: center;" href="{% url 'main:phone' product.pk %}">Купить</a>
+                  <a class="btn btn-success" style="float: center;" href="{% url 'main:to_cart' product.pk %}">В корзину</a>
+                </div>
+                {% block extended %}
+                {% endblock %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+      </div>
+    </section>
+
+    <div class="text-center">
+        {% if language == 'kz' %}
+        <div class="cs-navigate"><a type="button" class="btn btn-success" href="{% url 'main:all' %}">Барлық тауарлар мен қызметтер</a></div>
+        {% else %}
+        <div class="cs-navigate"><a type="button" class="btn btn-success" href="{% url 'main:all' %}">Все товары и услуги</a></div>
+        {% endif %}
+    </div>
+
+
+  </div>
+</main>
+
+
+
+
+
+
+
+
+{% endblock %}

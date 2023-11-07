@@ -1,0 +1,13 @@
+{% extends "products.html" %}
+
+{% block header %}
+{% load static %}
+{% load thumbnail %}
+
+{% if language == 'kz' %}
+<h4 class="mb-4"><strong>Іздеу нәтижелері</strong></h4><hr/><br/>
+{% else %}
+<h4 class="mb-4"><strong>Результаты поиска</strong></h4><hr/><br/>
+{% endif %}
+
+{% endblock %}

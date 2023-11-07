@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+{% load thumbnail %}
+
+<!--Main layout-->
+<main class="my-5">
+  <div class="container">
+    <section class="text-center">
+      {% block header %}
+      {% endblock %}
+
+      <div class="row">
+
+      <!-- PRODUCTS -->
+      {% if products %}
+      {% for product in products %}
+      <div class="col-lg-4 col-md-12 mb-4">
+        <div class="card bg-dark">
+          <div class="hover-overlay ripple">
+            <img src="{{ product.image|thumbnail_url:'main' }}" class="img-fluid" />
+            <a href="{% url 'main:detail' product.pk %}">
+              <div class="mask"></div>
+            </a>
+          </div>
+          <div class="card-body">
+            {% if language == 'kz' %}
+                <h4 class="card-title"><a style="color: #40CB72;" href="{% url 'main:detail' product.pk %}">{{ product.name_kz }}</a></h4><hr/>
+                <h5 class="card-text"><a style="color: white;" href="{% url 'main:sort_by' 'category' product.category.name %}">{{ product.category.name_kz }}</a> | <a style="color: white;" href="{% url 'main:sort_by' 'country' product.country.name %}">{{ product.country.name_kz }}</a></h5><hr/>
+                <h5 class="card-text">{{ product.description_kz|truncatewords:50 }}</h5><hr/>
+                {% if product.in_stock == True %}
+                <h5><span class="card-text" style="color: #40CB72;">{{ product.price }} ₸ &nbsp;&nbsp;</span><span class="mb-4">Қоймада бар</span></h5><hr/>
+                {% else %}
+                <h5><span class="card-text" style="color: #40CB72;">{{ product.price }} ₸ &nbsp;&nbsp;</span><span class="mb-4">Алдын ала тапсырыс бойынша</span></h5><hr/>
+                {% endif %}
+                <div>
+                  <a class="btn btn-success" style="float: center;" href="{% url 'main:phone' product.pk %}">Сатып алу</a>
+                  <a class="btn btn-success" style="float: center;" href="{% url 'main:to_cart' product.pk %}">Себетке</a>
+                </div>
+            {% else %}
+                <h4 class="card-title"><a style="color: #40CB72;" href="{% url 'main:detail' product.pk %}">{{ product.name }}</a></h4><hr/>
+                <h5 class="card-text"><a style="color: white;" href="{% url 'main:sort_by' 'category' product.category.name %}">{{ product.category.name }}</a> | <a style="color: white;" href="{% url 'main:sort_by' 'country' product.country.name %}">{{ product.country.name }}</a></h5><hr/>
+                <h5 class="card-text">{{ product.description|truncatewords:50 }}</h5><hr/>
+                {% if product.in_stock == True %}
+                <h5><span class="card-text" style="color: #40CB72;">{{ product.price }} ₸ &nbsp;&nbsp;</span><span class="mb-4">Есть в наличии</span></h5><hr/>
+                {% else %}
+                <h5><span class="card-text" style="color: #40CB72;">{{ product.price }} ₸ &nbsp;&nbsp;</span><span class="mb-4">По предварительному заказу</span></h5><hr/>
+                {% endif %}
+                <div>
+                  <a class="btn btn-success" style="float: center;" href="{% url 'main:phone' product.pk %}">Купить</a>
+                  <a class="btn btn-success" style="float: center;" href="{% url 'main:to_cart' product.pk %}">В корзину</a>
+                </div>
+                {% block extended %}
+                {% endblock %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      {% if language == 'kz' %}
+      <h4 class="mb-4"><strong>Бұл сұраныс бойынша тауарлар жоқ</strong></h4><hr/><br/>
+      {% else %}
+      <h4 class="mb-4"><strong>Нет товаров по данному запросу</strong></h4><hr/><br/>
+      {% endif %}
+      {% endif %}
+
+      </div>
+    </section>
+
+    {% block external %}
+    {% endblock %}
+
+    <!-- Pagination -->
+    {% if page.has_other_pages %}
+    <nav class="my-4" aria-label="...">
+      <ul class="pagination pagination-circle justify-content-center">
+        {% if page.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page.previous_page_number }}" tabindex="-1" aria-disabled="true"><<</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}">{{ page.previous_page_number }}</a></li>
+        {% endif %}
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="?page={{ page.number }}">{{ page.number }}</a>
+        </li>
+        {% if page.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}">{{ page.next_page_number }}</a></li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page.next_page_number }}">>></a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+</main>
+
+{% endblock %}

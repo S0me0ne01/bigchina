@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <!-- STATISTICS -->
+    <div class="album py-5">
+        <div class="container">
+        <div class="row">
+          <table class="table table-striped" style="color: white;">
+              <thead>
+                <tr>
+                  {% if lang == 'kz' %}
+                  <th scope="col">Жыл</th>
+                  <th scope="col">Ай</th>
+                  <th scope="col">Сапарлар</th>
+                  {% else %}
+                  <th scope="col">Год</th>
+                  <th scope="col">Месяц</th>
+                  <th scope="col">Посещения</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+              {% for visit in visits %}
+                <tr style="color: white;">
+                  <td>{{ visit.year }}</td>
+                  <td>{{ visit.month }}</td>
+                  <td>{{ visit.visits }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+        </div>
+        </div>
+    </div>
+
+{% endblock %}

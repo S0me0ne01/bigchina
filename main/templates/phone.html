@@ -1,0 +1,25 @@
+{% extends "input.html" %}
+
+{% load static %}
+{% load thumbnail %}
+{% load crispy_forms_tags %}
+
+{% block input %}
+
+{% if language == 'kz' %}
+<h1 class="cs-title cs-title_type_main_page">Кері қоңырауға тапсырыс беріңіз</h1>
+{% else %}
+<h1 class="cs-title cs-title_type_main_page">Заказать обратный звонок</h1>
+{% endif %}
+
+<form class="searchform" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <br/>
+    {% if language == 'kz' %}
+    <input type="submit" class="btn btn-lg btn-success", value="Жіберу">
+    {% else %}
+    <input type="submit" class="btn btn-lg btn-success", value="Отправить">
+    {% endif %}
+</form>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+   <!-- LOGIN -->
+   <div class="album py-5">
+  <div class="container">
+    <div class="row">
+
+      {% load crispy_forms_tags %}
+      {% if request.user.is_authenticated %}
+
+      <div class="col-md-5 p-lg-5 mx-auto my-5">
+        {% if language == 'kz' %}
+        <h1 class="display-4 font-weight-normal text-center">Сіз қазірдің өзінде тіркелгіге кірдіңіз</h1>
+        {% else %}
+        <h1 class="display-4 font-weight-normal text-center">Вы уже вошли в аккаунт</h1>
+        {% endif %}
+        <hr/>
+        <div class="text-center">
+          {% if language == 'kz' %}
+          <a class="btn btn-success" href="{% url 'main:logout' %}">Шығу</a>
+          {% else %}
+          <a class="btn btn-success" href="{% url 'main:logout' %}">Выйти</a>
+          {% endif %}
+        </div>
+        <br/>
+      </div>
+      {% else %}
+      <form method="post" class="form-signin">
+        {% if language == 'kz' %}
+        <h1 class="h3 mb-3 font-weight-normal">Авторизация</h1>
+        {% else %}
+        <h1 class="h3 mb-3 font-weight-normal">Авторизация</h1>
+        {% endif %}
+
+        {% csrf_token %}
+        {{ form|crispy }}
+        <br/>
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        <div class="text-center">
+          <div class="d-inline-block">
+            <input class="btn btn-success" type="submit" value="Войти | Кiру">
+          </div>
+          <hr/>
+          <div class="d-inline-block">
+            <a class="btn btn-success" href="{% url 'main:register' %}">Регистрация | Тіркеу</a>
+          </div>
+        </div>
+      </form>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+{% load thumbnail %}
+
+<!--Main layout-->
+<main class="my-5">
+  <div class="container">
+    <section class="text-center">
+      {% if language == 'kz' %}
+      <h4 class="display-6"><strong>Себет</strong></h4><hr/><br/>
+      {% else %}
+      <h4 class="display-6"><strong>Корзина</strong></h4><hr/><br/>
+      {% endif %}
+
+      <div class="row">
+
+        <!-- CARTS -->
+        {% for cart in carts %}
+        <div class="col-lg-4 col-md-12 mb-4">
+          <div class="card bg-dark">
+            <div class="hover-overlay ripple">
+              <img src="{{ cart.product.image|thumbnail_url:'main' }}" class="img-fluid" />
+              <a href="{% url 'main:detail' cart.product.pk %}">
+                <div class="mask"></div>
+              </a>
+            </div>
+            <div class="card-body">
+
+
+              {% if language == 'kz' %}
+                  <h4 class="card-title"><a style="color: #40CB72;" href="{% url 'main:detail' cart.product.pk %}">{{ cart.product.name_kz }} - {{ cart.quantity }} дана</a></h4><hr/>
+                  <h5 class="card-text"><a style="color: white;" href="{% url 'main:sort_by' 'category' cart.product.category.name %}">{{ cart.product.category.name_kz }}</a> | <a style="color: white;" href="{% url 'main:sort_by' 'country' cart.product.country.name %}">{{ cart.product.country.name_kz }}</a></h5><hr/>
+                  <h5 class="card-text">{{ cart.product.description_kz|truncatewords:50 }}</h5><hr/>
+                  {% if cart.product.in_stock == True %}
+                  <h5><span class="card-text" style="color: #40CB72;">{{ cart.product.price }} сом &nbsp;&nbsp;</span><span class="mb-4">Қоймада бар</span></h5><hr/>
+                  {% else %}
+                  <h5><span class="card-text" style="color: #40CB72;">{{ cart.product.price }} сом &nbsp;&nbsp;</span><span class="mb-4">Қоймада жоқ</span></h5><hr/>
+                  {% endif %}
+                  <form id="company_product_search_form" class="cs-search" name="company_product_search_form" method="get" action="{% url 'main:to_cart' cart.product.pk %}"><div class="cs-search__inner"><input id="search_term" class="cs-search__field" name="input" autocomplete="off" maxlength="1000" type="text" placeholder="Саны"></form>
+                  <div class="">
+                    &nbsp;&nbsp;
+                    <div>
+                    <button type="button-submit" class="btn btn-success">Саны</button>
+                    <a class="btn btn-success" style="float: center;" href="{% url 'main:phone' cart.product.pk %}">Сатып алу</a>
+                    <a class="btn btn-success" style="float: center;" href="{% url 'main:from_cart' cart.product.pk %}">Алып тастаңыз</a>
+                    </div>
+                    </div></div><br/>
+              {% else %}
+                  <h4 class="card-title"><a style="color: #40CB72;" href="{% url 'main:detail' cart.product.pk %}">{{ cart.product.name }} - {{ cart.quantity }} шт</a></h4><hr/>
+                  <h5 class="card-text"><a style="color: white;" href="{% url 'main:sort_by' 'category' cart.product.category.name %}">{{ cart.product.category.name }}</a> | <a style="color: white;" href="{% url 'main:sort_by' 'country' cart.product.country.name %}">{{ cart.product.country.name }}</a></h5><hr/>
+                  <h5 class="card-text">{{ cart.product.description|truncatewords:50 }}</h5><hr/>
+                  {% if product.in_stock == True %}
+                  <h5><span class="card-text" style="color: #40CB72;">{{ cart.product.price }} сом &nbsp;&nbsp;</span><span class="mb-4">Есть в наличии</span></h5><hr/>
+                  {% else %}
+                  <h5><span class="card-text" style="color: #40CB72;">{{ cart.product.price }} сом &nbsp;&nbsp;</span><span class="mb-4">Нет в наличии</span></h5><hr/>
+                  {% endif %}
+                  <form method="get" action="{% url 'main:to_cart' cart.product.pk %}"><div class="cs-search__inner"><input id="search_term" class="cs-search__field" name="input" autocomplete="off" maxlength="1000" type="text" placeholder="Кол-во"></form>
+                  <div class="">
+                    &nbsp;&nbsp;
+                    <div>
+                    <a class="btn btn-success" style="float: center;" href="{% url 'main:phone' cart.product.pk %}">Купить</a>
+                    <a class="btn btn-success" style="float: center;" href="{% url 'main:from_cart' cart.product.pk %}">Убрать</a>
+                    </div>
+                    </div></div><br/>
+                  {% block extended %}
+                  {% endblock %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+        {% if language == 'kz' %}
+        <div class="cs-navigate">
+          <a type="button" class="btn btn-success" href="{% url 'main:phone' -1 %}">Тапсырыс беру</a>&nbsp;
+          <a type="button" class="btn btn-success" href="{% url 'main:cart_erase' %}">Тазалау</a>
+        </div>
+        {% else %}
+        <div class="cs-navigate">
+          <a type="button" class="btn btn-success" href="{% url 'main:phone' -1 %}">Сделать заказ</a>&nbsp;
+          <a type="button" class="btn btn-success" href="{% url 'main:cart_erase' %}">Очистить</a>
+        </div>
+        {% endif %}
+
+    <!-- Pagination -->
+    {% if page.has_other_pages %}
+    <nav class="my-4" aria-label="...">
+      <ul class="pagination pagination-circle justify-content-center">
+        {% if page.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page.previous_page_number }}" tabindex="-1" aria-disabled="true"><<</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}">{{ page.previous_page_number }}</a></li>
+        {% endif %}
+        <li class="page-item active" aria-current="page">
+          <a class="page-link" href="?page={{ page.number }}">{{ page.number }}</a>
+        </li>
+        {% if page.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}">{{ page.next_page_number }}</a></li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page.next_page_number }}">>></a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+</main>
+
+{% endblock %}

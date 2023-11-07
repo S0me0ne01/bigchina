@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+   <!-- REGISTER -->
+   <div class="album py-5">
+     <div class="container">
+     <div class="row">
+
+       {% load crispy_forms_tags %}
+       {% if request.user.is_authenticated %}
+       <div class="text-center">
+         {% if language == 'kz' %}
+         <h1 class="display-6 font-weight-normal text-center">Сіз қазірдің өзінде тіркелдіңіз</h1><br/>
+         <a class="btn btn-success" href="{% url 'main:logout' %}">Шығу</a>
+         {% else %}
+         <h1 class="display-6 font-weight-normal text-center">Вы уже зарегистрировались</h1><br/>
+         <a class="btn btn-success" href="{% url 'main:logout' %}">Выйти</a>
+         {% endif %}
+       </div>
+       {% else %}
+       <form method="post" class="form-signin">
+           {% if language == 'kz' %}
+           <h1 class="h3 mb-3 font-weight-normal">Тіркеу</h1>
+           {% else %}
+           <h1 class="h3 mb-3 font-weight-normal">Регистрация</h1>
+           {% endif %}
+
+           {% csrf_token %}
+           {{ form|crispy }}
+           <br/>
+           <input type="hidden" name="next" value="{{ request.GET.next }}">
+           <input class="btn btn-success" type="submit" value="Подтвердить | Растау">
+       </form>
+       {% endif %}
+
+     </div>
+     </div>
+   </div>
+
+{% endblock %}
